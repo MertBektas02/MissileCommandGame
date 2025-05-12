@@ -7,13 +7,17 @@ using UnityEngine.UI;
 
 public class EnemyMissile1 : MonoBehaviour
 {
+    [Header("Missile speed")]
     [SerializeField] private float speed = 2f;
+    [Header("Prefabs")]
     [SerializeField] private GameObject enemyExplotionPrefab;
 
     [SerializeField] private GameObject friendlyExplotionPrefab;
-    private Vector3 target;
     [SerializeField] private GameObject popUpText;
+    private Vector3 target;//missile'ın burnunu hedefe doğru çevirmesi için pos.
     private string missilePoint="+1";
+    [Header("bağımlılık 1")]
+    [SerializeField] private EnemyMissile  enemyMissileManager;
 
 
 
@@ -39,7 +43,7 @@ public class EnemyMissile1 : MonoBehaviour
 
            
             GameObject explosion=Instantiate(enemyExplotionPrefab,transform.position,Quaternion.identity);
-            Destroy(gameObject,0.1f); 
+            Destroy(gameObject); 
             Destroy(explosion,3f);
         }
 
@@ -57,6 +61,14 @@ public class EnemyMissile1 : MonoBehaviour
             Destroy(explosion,3f);
           
         }
+        if (other.CompareTag("Game4Building"))
+        {
+            if (enemyMissileManager!=null)
+            {
+                enemyMissileManager.RemoveTarget(other.gameObject);
+            }
+            Destroy(other.gameObject);
+        }
     }
     void ShowPopUpText()
     {
@@ -65,7 +77,7 @@ public class EnemyMissile1 : MonoBehaviour
         Vector3 randomOffset=new Vector3(UnityEngine.Random.Range(-0.5f, 0.5f),0.5f,0f);
         GameObject floatingText=Instantiate(popUpText,transform.position+randomOffset,Quaternion.identity);
         //floatingText.GetComponent<TextMesh>().text=missilePoint.ToString(); //Animasyon kaydettiğimde text 0 0 0 pozisyonlarında instantiate ediliyordu. Sebebi bu kod parçasıymış.
-        //Ayrıca number animasyonunun position problemini child ekleyerek çözdüm. Parent halen fare pozisyonunda spawn oluyor. Child'in pozisyonu baz alınmıyor.
+        //Ayrıca number animasyonunun position problemini child ekleyerek çözdüm. child halen fare pozisyonunda spawn oluyor. parent'in pozisyonu baz alınmıyor.
         TextMesh textComponent = floatingText.GetComponentInChildren<TextMesh>();
         if (textComponent != null)
         {
@@ -73,7 +85,13 @@ public class EnemyMissile1 : MonoBehaviour
             
         }
         Destroy(floatingText,1.25f);
-
         
     }
 }
+
+
+/* !!ÖNEMLİ: EnemyMissile prefab'ine MissileManager Scriptine ulaşmak için atama yapmalıyım ama 
+    herhangi bir atama yapmadan da script'e erişebiliyor ve removeTarget metodunu çalıştırabiliyorum.
+    Bunun nasıl mümkün olduğunu bilmiyorum. GPT gizli bağlantılar olabilir diyor. Ne gizli bağlantısı abicim?
+    
+    "Unity'de scene object’leri prefab’ın içine Inspector’dan atamak mümkün değildir, çünkü sahne referansları prefab verisine kaydedilmez."*/

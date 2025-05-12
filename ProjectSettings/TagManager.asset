@@ -9,6 +9,7 @@ TagManager:
   - Brick
   - Game4FriendlyMissile
   - Game4EnemyMissile
+  - Game4Building
   layers:
   - Default
   - TransparentFX
