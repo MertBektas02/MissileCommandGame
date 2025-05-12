@@ -16,8 +16,11 @@ public class EnemyMissile1 : MonoBehaviour
     [SerializeField] private GameObject popUpText;
     private Vector3 target;//missile'ın burnunu hedefe doğru çevirmesi için pos.
     private string missilePoint="+1";
-    [Header("bağımlılık 1")]
-    [SerializeField] private EnemyMissile  enemyMissileManager;
+    [Header("bağımlılıklar")]
+    // [SerializeField] private EnemyMissile  enemyMissileManager;
+
+     [Header("missile damage")]
+     [SerializeField] private int missileDamageAmount=100;
 
 
 
@@ -63,11 +66,11 @@ public class EnemyMissile1 : MonoBehaviour
         }
         if (other.CompareTag("Game4Building"))
         {
-            if (enemyMissileManager!=null)
+            CityHealth health=other.GetComponent<CityHealth>();
+            if (health!=null)
             {
-                enemyMissileManager.RemoveTarget(other.gameObject);
+                health.TakeDamage(missileDamageAmount);
             }
-            Destroy(other.gameObject);
         }
     }
     void ShowPopUpText()

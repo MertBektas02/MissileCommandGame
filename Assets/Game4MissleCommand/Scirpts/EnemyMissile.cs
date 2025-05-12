@@ -44,11 +44,11 @@ public class EnemyMissile : MonoBehaviour //Bu script bir MANAGER'dir.
 
     }
 
-    public void AddTarget(GameObject target)
+    public void AddTargetToList(GameObject target)
     {
         if(!enemyTargetPositions.Contains(target)){enemyTargetPositions.Add(target);} //ileride upgrade sistemini getirince add target yapmak gerekebilir.
     }
-    public void RemoveTarget(GameObject target)
+    public void RemoveTargetFromList(GameObject target)
     {
         if(enemyTargetPositions.Contains(target)){enemyTargetPositions.Remove(target);}
     }
