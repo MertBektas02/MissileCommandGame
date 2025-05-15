@@ -5,6 +5,9 @@ public class FireMissle : MonoBehaviour
 
     [SerializeField] private GameObject[] launchers; // 3 roketatar
     [SerializeField] private GameObject missilePrefab;
+    [Header("Upgrade SO'leri")]
+    [SerializeField] private FloatEventSO missileSpeedEvent;
+    private float speedMultiplier=1f;
 
     private void Update()
     {
@@ -73,6 +76,8 @@ public class FireMissle : MonoBehaviour
     private void Fire(Vector3 from, Vector3 to)
     {
     GameObject missile = Instantiate(missilePrefab, from, Quaternion.identity);
+    missile.GetComponent<Missile>().ApplySpeedMultiplier(speedMultiplier);
+
 
     // Rotasyon hesabı
     Vector3 direction = to - from;
@@ -81,6 +86,33 @@ public class FireMissle : MonoBehaviour
 
     missile.GetComponent<Missile>().SetTarget(to);
     }
+
+
+    //--------------upgradeler ile ilgili denemeler----------------
+
+    private void ApplySpeedMultiplier(float multiplier)
+    {
+        speedMultiplier *= multiplier;
+        /*her speed upgrade'e tıkladığımda aritmetik olarak artsın istersem
+          speedMultiplier *= multiplier şeklinde düzeltme yapmam yeterli.*/
+    }
+    private void OnEnable()
+    {
+        if(missileSpeedEvent!=null)
+        {
+            missileSpeedEvent.OnEventRaised+=ApplySpeedMultiplier;
+        }
+    }
+    private void OnDisable()
+    {
+        if (missileSpeedEvent!=null)
+        {
+            missileSpeedEvent.OnEventRaised-=ApplySpeedMultiplier;
+        }
+    }
+    //--------------upgradeler ile ilgili denemeler----------------
+    
+
     //Math fonksiyonlarına bak ananın amı ya. 
 
 

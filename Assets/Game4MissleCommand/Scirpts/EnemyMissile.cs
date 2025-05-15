@@ -8,7 +8,7 @@ using UnityEditor.Tilemaps;
 using UnityEngine;
 
 
-public class EnemyMissile : MonoBehaviour //Bu script bir MANAGER'dir.
+public class EnemyMissile : MonoBehaviour //Bu script bir MANAGER'dir. //enemyMissileManager
 {
     [Header("Missile spawn pos ve hedef pos")] //(hedef pos'lar array idi. list'e çevrildi çünkü runtime'da ekleme ve çıkarma yapılması gerek. array'de bu mümkün değilmiş.)
     [SerializeField] private GameObject[] enemyFirePositions;
@@ -17,6 +17,8 @@ public class EnemyMissile : MonoBehaviour //Bu script bir MANAGER'dir.
     [SerializeField] private GameObject enemyMisslePrefab;
     [Header("Missile kaç saniyede bir spawn olacak?")]
     [SerializeField] private float spawnInterval = 5f;
+
+
     private float timer;
 
     private void Update()
@@ -42,21 +44,35 @@ public class EnemyMissile : MonoBehaviour //Bu script bir MANAGER'dir.
         GameObject missile=Instantiate(enemyMisslePrefab,launchPos.position,Quaternion.identity);
         missile.GetComponent<EnemyMissile1>().SetTarget(targetPos.position);
 
+
     }
 
     public void AddTargetToList(GameObject target)
     {
-        if(!enemyTargetPositions.Contains(target)){enemyTargetPositions.Add(target);} //ileride upgrade sistemini getirince add target yapmak gerekebilir.
+        if(!enemyTargetPositions.Contains(target)){enemyTargetPositions.Add(target);} 
+        //ileride upgrade sistemini getirince add target yapmak gerekebilir.
     }
     public void RemoveTargetFromList(GameObject target)
     {
         if(enemyTargetPositions.Contains(target)){enemyTargetPositions.Remove(target);}
+        //bu moetod'un yapacağı işi zaten SelectTargetRondomlyAndFire() yapıyor. yine de dursun.
     }
+
+
+
+
+
+
+
 }
 
 /* !!ÖNEMLİ: EnemyMissile prefab'ine MissileManager Scriptine ulaşmak için atama yapmalıyım ama 
     herhangi bir atama yapmadan da script'e erişebiliyor ve removeTarget metodunu çalıştırabiliyorum.
     Bunun nasıl mümkün olduğunu bilmiyorum. GPT gizli bağlantılar olabilir diyor. Ne gizli bağlantısı abicim?
     
-    "Unity'de scene object’leri prefab’ın içine Inspector’dan atamak mümkün değildir, çünkü sahne referansları prefab verisine kaydedilmez.
-    aksi halde "Type Mismatch" hatası almalıyım."*/
+    "Unity'de scene object’leri prefab’ın içine Inspector’dan atamak mümkün değildir, çünkü sahne referansları prefab verisine kaydedilmez."
+    
+    
+    problemi çözdüm. MissileManager'deki SetRondomlyAndFire metodunda bulunan enemyTargetPositions.RemoveAll(t=> t==null);
+    kodu city destroy edilir edilmez null olan objeyi temizliyor. RemoveTargetFromList metodunun çalışmasına gerek kalmıyor.
+    Ben de sanıyordum ki inspectordan atama yapılmadı. Yİne de reomve metdou çalışıyor.*/

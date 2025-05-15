@@ -1,9 +1,12 @@
 using System.Drawing;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Game4UpdateUI : MonoBehaviour
 {
+
+    [SerializeField] private GameObject upgradePanel;
 
     [SerializeField] private TextMeshProUGUI pointText;
     private int point;
@@ -54,11 +57,24 @@ public class Game4UpdateUI : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToggleUpgradePanel();
+        }
+    }
+
+
     public void G4UpdateUI()
     {
         point++;
         pointText.text=point.ToString();
         
+    }
+
+    private void ToggleUpgradePanel()
+    {
+        upgradePanel.SetActive(!upgradePanel.activeSelf);
     }
 }
